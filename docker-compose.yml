@@ -1,0 +1,62 @@
+# ════════════════════════════════════════════════════════════════
+# GitLens — Docker Compose (local development with MySQL)
+# Usage: docker compose up --build
+# ════════════════════════════════════════════════════════════════
+
+version: '3.9'
+
+services:
+
+  # ── MySQL 8 ───────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass123}
+      MYSQL_DATABASE: github_analyzer
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Auto-import schema on first run (only when data volume is empty)
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u
+        - root
+        - --password=${DB_PASSWORD:-rootpass123}
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+    command: --default-authentication-plugin=mysql_native_password
+
+  # ── Node.js App ───────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-rootpass123}
+      DB_NAME: github_analyzer
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+    driver: local

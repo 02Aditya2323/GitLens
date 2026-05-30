@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitLens — GitHub Profile Analyzer</title>
+  <meta name="description" content="Deep-dive analysis of any GitHub developer profile. Stars, languages, orgs, activity, contribution score and more — stored and ranked." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ════ NAV ════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.29.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.7.115 2.5.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+      <span>GitLens</span>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-view="analyze" id="tabAnalyze">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z"/><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-3.446 6.032l-2.261 2.26a1 1 0 101.414 1.415l2.261-2.261A4 4 0 1011 5z" clip-rule="evenodd"/></svg>
+        Analyze
+      </button>
+      <button class="nav-tab" data-view="profiles" id="tabProfiles">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+        Profiles
+      </button>
+      <button class="nav-tab" data-view="leaderboard" id="tabLeaderboard">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/></svg>
+        Leaderboard
+      </button>
+    </div>
+    <div class="nav-status" id="navStatus">
+      <span class="status-dot"></span>
+      <span class="status-text">API Online</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ════ MAIN ════ -->
+<main class="main">
+
+  <!-- ── ANALYZE VIEW ── -->
+  <section class="view active" id="viewAnalyze">
+    <div class="hero">
+      <div class="hero-badge">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+        GitHub Intelligence v2
+      </div>
+      <h1 class="hero-title">Analyze Any GitHub<br /><span class="gradient-text">Developer Profile</span></h1>
+      <p class="hero-sub">Deep insights — stars, languages, organizations, activity, topics, contribution score and more. Paste a username <em>or a full GitHub URL</em>.</p>
+
+      <div class="search-card" id="searchCard">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="usernameInput" class="search-input" placeholder="torvalds  or  https://github.com/torvalds" autocomplete="off" spellcheck="false" />
+          <button class="search-btn" id="analyzeBtn" onclick="analyzeProfile()">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            Analyze
+          </button>
+        </div>
+        <div class="search-hints">
+          <span>Try:</span>
+          <button class="hint-chip" onclick="quickSearch('torvalds')">torvalds</button>
+          <button class="hint-chip" onclick="quickSearch('gaearon')">gaearon</button>
+          <button class="hint-chip" onclick="quickSearch('sindresorhus')">sindresorhus</button>
+          <button class="hint-chip" onclick="quickSearch('tj')">tj</button>
+          <button class="hint-chip" onclick="quickSearch('https://github.com/yarnpkg')">URL example</button>
+        </div>
+        <div class="url-hint">✓ Accepts GitHub URLs like <code>https://github.com/username</code></div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-wrap hidden" id="loadingWrap">
+      <div class="loader-card">
+        <div class="loader-spinner"></div>
+        <div class="loader-text" id="loaderText">Analyzing profile…</div>
+        <div class="loader-steps" id="loaderSteps">
+          <div class="loader-step" id="step1">Fetching GitHub profile</div>
+          <div class="loader-step" id="step2">Fetching all repositories</div>
+          <div class="loader-step" id="step3">Fetching orgs, activity & social accounts</div>
+          <div class="loader-step" id="step4">Computing contribution score</div>
+          <div class="loader-step" id="step5">Saving to database</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="alert alert-error hidden" id="errorAlert">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+      <span id="errorMsg"></span>
+    </div>
+
+    <!-- Profile Result -->
+    <div class="profile-result hidden" id="profileResult"></div>
+  </section>
+
+  <!-- ── PROFILES VIEW ── -->
+  <section class="view" id="viewProfiles">
+    <div class="view-header">
+      <div>
+        <h2 class="view-title">Analyzed Profiles</h2>
+        <p class="view-sub">All stored developer profiles</p>
+      </div>
+      <div class="view-controls">
+        <select class="control-select" id="profileSort" onchange="loadProfiles()">
+          <option value="analyzed_at">Latest Analyzed</option>
+          <option value="contribution_score">Top Score</option>
+          <option value="followers">Most Followers</option>
+          <option value="total_stars">Most Stars</option>
+          <option value="public_repos">Most Repos</option>
+        </select>
+        <select class="control-select" id="profileOrder" onchange="loadProfiles()">
+          <option value="DESC">Descending</option>
+          <option value="ASC">Ascending</option>
+        </select>
+      </div>
+    </div>
+    <div class="profiles-grid" id="profilesGrid"></div>
+    <div class="pagination" id="pagination"></div>
+  </section>
+
+  <!-- ── LEADERBOARD VIEW ── -->
+  <section class="view" id="viewLeaderboard">
+    <div class="view-header">
+      <div>
+        <h2 class="view-title">🏆 Leaderboard</h2>
+        <p class="view-sub">Top developers ranked by key metrics</p>
+      </div>
+      <div class="view-controls">
+        <select class="control-select" id="lbMetric" onchange="loadLeaderboard()">
+          <option value="contribution_score">🎯 GitLens Score</option>
+          <option value="total_stars">⭐ Total Stars</option>
+          <option value="followers">👥 Followers</option>
+          <option value="public_repos">📦 Repositories</option>
+          <option value="total_forks">🍴 Total Forks</option>
+        </select>
+        <select class="control-select" id="lbLimit" onchange="loadLeaderboard()">
+          <option value="5">Top 5</option>
+          <option value="10" selected>Top 10</option>
+          <option value="25">Top 25</option>
+        </select>
+      </div>
+    </div>
+    <div class="leaderboard-list" id="leaderboardList"></div>
+  </section>
+
+</main>
+
+<!-- ════ MODAL ════ -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-box" id="modalBox" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()" id="modalCloseBtn">✕</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ════ TOAST ════ -->
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

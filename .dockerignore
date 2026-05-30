@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+.github
+
+# Docker compose (not needed inside image)
+docker-compose.yml
+docker-compose*.yml
+
+# Logs
+*.log
+logs/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode
+.idea
+*.swp
+
+# Test & CI
+coverage/
+.nyc_output
+*.test.js
+*.spec.js
+
+# Documentation (reduces image size)
+README.md

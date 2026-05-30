@@ -1,0 +1,88 @@
+{
+  "info": {
+    "_postman_id": "gitlens-github-analyzer",
+    "name": "GitLens — GitHub Profile Analyzer API",
+    "description": "Complete API collection for the GitHub Profile Analyzer backend service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "torvalds",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔍 Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/health",
+        "description": "Check if the API server is running and healthy."
+      }
+    },
+    {
+      "name": "⚡ Analyze Profile",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/analyze/{{username}}",
+        "description": "Fetches a GitHub user's profile, computes insights (stars, forks, languages, top repos, etc.), and stores/updates the result in MySQL. If the profile already exists it is updated (upsert)."
+      }
+    },
+    {
+      "name": "📋 Get All Profiles",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/profiles?page=1&limit=20&sort=analyzed_at&order=DESC",
+          "host": ["{{base_url}}"],
+          "path": ["api", "profiles"],
+          "query": [
+            { "key": "page",  "value": "1",            "description": "Page number (default: 1)" },
+            { "key": "limit", "value": "20",           "description": "Results per page (default: 20)" },
+            { "key": "sort",  "value": "analyzed_at",  "description": "Sort field: analyzed_at | followers | total_stars | public_repos | username" },
+            { "key": "order", "value": "DESC",          "description": "Sort direction: ASC | DESC" }
+          ]
+        },
+        "description": "Returns all analyzed profiles stored in the database with pagination."
+      }
+    },
+    {
+      "name": "👤 Get Single Profile",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/profiles/{{username}}",
+        "description": "Returns the full analysis data (including top repos and language breakdown JSON) for a single stored profile."
+      }
+    },
+    {
+      "name": "🗑 Delete Profile",
+      "request": {
+        "method": "DELETE",
+        "url": "{{base_url}}/api/profiles/{{username}}",
+        "description": "Permanently removes a profile from the database."
+      }
+    },
+    {
+      "name": "🏆 Leaderboard",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/leaderboard?metric=total_stars&limit=10",
+          "host": ["{{base_url}}"],
+          "path": ["api", "leaderboard"],
+          "query": [
+            { "key": "metric", "value": "total_stars", "description": "Metric to rank by: total_stars | followers | public_repos | total_forks | account_age_days" },
+            { "key": "limit",  "value": "10",          "description": "Number of top profiles to return" }
+          ]
+        },
+        "description": "Returns the top N profiles ranked by a chosen metric."
+      }
+    }
+  ]
+}
